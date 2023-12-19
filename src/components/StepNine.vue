@@ -4,32 +4,47 @@ import { ElMessage } from 'element-plus'
 export default {
 
   setup(props,{emit}) {
-    const firstName = ref('');
-    const lastName = ref('')
+    const email = ref('');
+    const emailRepeat = ref('');
     const goBack = ()=>{
-      emit('changeCurrent',{current:2,progress:25})
+      emit('changeCurrent',{current:8,progress:700/12})
     }
     const goNext = ()=>{
-      if(!firstName.value || !lastName.value){
+      if(!email.value){
         return ElMessage({
-                  message: 'Please enter your firstName and lastName',
+                  message: 'Please enter your Email',
                   type: 'warning',
                 })
       }
-      sessionStorage.setItem('name',JSON.stringify({firstName:firstName.value,lastName:lastName.value}))
-      emit('changeCurrent',{current:4,progress:100/3})
+      if(!emailRepeat.value){
+        return ElMessage({
+                  message: 'Please repeat enter your Email',
+                  type: 'warning',
+                })
+      }
+      if(email.value!==emailRepeat.value){
+        return ElMessage({
+                  message: 'The two entered email addresses are inconsistent',
+                  type: 'warning',
+                })
+      }
+      sessionStorage.setItem('email',email.value)
+      sessionStorage.setItem('emailRepeat',email.value)
+      emit('changeCurrent',{current:10,progress:75})
     }
     onMounted(() => {
-      let name = sessionStorage.getItem('name')
-      if(name){
-        name = JSON.parse(name)
-        firstName.value = name.firstName;
-        lastName.value = name.lastName
+      const cacheEmail = sessionStorage.getItem('email')
+      const cacheEmailRepeat = sessionStorage.getItem('emailRepeat')
+      if(cacheEmail){
+        email.value = cacheEmail
+      }
+      if(cacheEmailRepeat){
+        emailRepeat.value = cacheEmailRepeat
       }
     })
     return {
-      firstName,
-      lastName,
+      email,
+      emailRepeat,
       goBack,
       goNext
     }
@@ -39,17 +54,19 @@ export default {
 </script>
 
 <template>
-  <div class="step-three">
+  <div class="step-nine">
     <el-card class="box-card">
       <div class="arrow"><el-icon @click="goBack" class="back"><Back /></el-icon></div>
       <div class="content">
-        <div class="title">What's your name?</div>
+        <div class="title">Where can we reach you?</div>
         <div class="desc">
-          Please enter your full name as it appears on your Driver`s License or Passport.
+          Help us stay connected by providing us with your e-mail address. We'll share important updates, investment opportunities, and personalized insights. 
         </div>
         <div class="input">
-          <el-input class="first-name" v-model="firstName" placeholder="First Name" />
-          <el-input v-model="lastName" placeholder="Last Name" />
+          <el-input v-model="email" placeholder="Email" />
+        </div>
+        <div class="input" v-if=" /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)">
+          <el-input v-model="emailRepeat" placeholder="Re-enter email" />
         </div>
         <div class="btn">
           <el-button @click="goNext" type="primary" round > &nbsp; &nbsp; &nbsp;Press enter &nbsp; &nbsp; &nbsp;<el-icon ><Right /></el-icon></el-button>
@@ -61,7 +78,7 @@ export default {
 </template>
 
 <style  lang="less">
-  .step-three{
+  .step-nine{
     height: 90vh;
     display: flex;
     justify-content: center;
@@ -90,10 +107,8 @@ export default {
         margin-bottom: 30px;
       }
       .input{
-        display: flex;
-        .first-name{
-          margin-right: 10px;
-        }
+        margin-bottom: 10px;
+        
       }
       .btn{
         padding-top: 30px;
@@ -102,40 +117,41 @@ export default {
     }
   }
   @media (min-width: 768px) {
-    .step-three{
+    .step-nine{
     align-items: center;
     .box-card{
       width: 50%!important;
       .arrow{
         display: block;
       }
-      .btn{
-        .arrow{
-          display: none;
-        }
-      }
   }
+  .btn{
+      .arrow{
+        display: none;
+        
+      }
+     }
   }
 }
 @media screen and (min-width: 501px), screen and (max-width: 767px) {
-  .step-three{
+  .step-nine{
     align-items: center;
     .box-card{
       width: 80%;
       .arrow{
         display: block;
       }
-      .btn{
-        .arrow{
-          display: none;
-        }
+  }
+  .btn{
+      .arrow{
+        display: none;
+        
       }
+     }
   }
-  }
-  
 }
 @media (max-width:500px){
-  .step-three{
+  .step-nine{
     overflow: auto;
     align-items:baseline;
     .box-card{
@@ -148,6 +164,7 @@ export default {
      .content{
       .desc,.input{
         padding: 0 20px;
+        margin-top: 20px;
       }
      }
      .btn{

@@ -5,7 +5,14 @@ import StepTwo from '../components/StepTwo.vue';
 import StepThree from '../components/StepThree.vue';
 import StepFour from '../components/StepFour.vue';
 import StepFive from '../components/StepFive.vue';
+import StepFiveA from '../components/StepFiveA.vue';
 import StepSix from '../components/StepSix.vue'
+import StepSeven from '../components/StepSeven.vue';
+import StepEight from '../components/StepEight.vue';
+import StepNine from '../components/StepNine.vue';
+import StepTen from '../components/StepTen.vue';
+import StepEleven from '../components/StepEleven.vue';
+import TitleIcon from '../assets/images/title.png'
 export default {
   name:'home',
   components:{
@@ -14,10 +21,17 @@ export default {
     StepThree,
     StepFour,
     StepFive,
-    StepSix
+    StepFiveA,
+    StepSix,
+    StepSeven, 
+    StepEight,
+    StepNine,
+    StepTen,
+    StepEleven
   },
   setup(){
-    const progress = ref(20);
+    const titleIcon = ref(TitleIcon)
+    const progress = ref(1/12*100);
     const current = ref(1);
     const changeCurrent = (values)=>{
         current.value = values.current
@@ -37,6 +51,7 @@ export default {
         }
       })
       return {
+        titleIcon,
         progress,
         current,
         changeCurrent
@@ -47,11 +62,12 @@ export default {
 
 <template>
   <div class="nav">
-    <div class="wrapper">
-      <div class="item">SELBY</div>
+    <!-- <div class="wrapper"> -->
+      <!-- <div class="item">SELBY</div>
       <div class="item">LANE</div>
-      <div class="item">CAPITAL</div>
-    </div>
+      <div class="item">CAPITAL</div> -->
+      <img :src="titleIcon" alt="">
+    <!-- </div> -->
   </div>
    <el-progress :percentage="progress" :show-text="false" striped striped-flow :stroke-linecap="square" :stroke-width="10" indeterminate :duration="50" />
    <StepOne v-if="current === 1" @changeCurrent="changeCurrent"/>
@@ -59,17 +75,27 @@ export default {
    <StepThree v-if="current === 3" @changeCurrent="changeCurrent"/>
    <StepFour v-if="current === 4" @changeCurrent="changeCurrent"/>
    <StepFive v-if="current === 5" @changeCurrent="changeCurrent"/>
+   <StepFiveA v-if="current === 5.1" @changeCurrent="changeCurrent"/>
    <StepSix v-if="current === 6" @changeCurrent="changeCurrent"/>
+   <StepSeven v-if="current === 7" @changeCurrent="changeCurrent"/>
+   <StepEight v-if="current === 8" @changeCurrent="changeCurrent"/>
+   <StepNine v-if="current === 9" @changeCurrent="changeCurrent"/>
+   <StepTen v-if="current === 10" @changeCurrent="changeCurrent"/>
+   <StepEleven v-if="current === 11" @changeCurrent="changeCurrent"/>
 </template>
 
 <style lang="less">
   .nav{
-    height: 60px;
+    // height: 60px;
     background-color: #163453;
     margin-bottom: 0px;
     color: #fff;
     line-height: 15px;
-    padding: 8px 0 0 20px;
+    padding: 10px ;
+    img{
+      width: 64px;
+      height: 64px;
+    }
   }
   .el-progress-bar__outer {
     border-bottom-left-radius: 0 !important;
@@ -79,4 +105,20 @@ export default {
     border-bottom-left-radius: 0 !important;
     border-top-left-radius: 0 !important;
   }
+
+@media (min-width: 768px) {
+  .nav{
+    text-align: left!important;
+  } 
+}
+@media screen and (min-width: 501px), screen and (max-width: 767px) {
+  .nav{
+    text-align: center;
+  }
+}
+@media (max-width:500px){
+  .nav{
+    text-align: center;
+  }
+}
 </style>

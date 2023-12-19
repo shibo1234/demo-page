@@ -13,6 +13,10 @@ export default {
       list.value = countries.value.map((item) => {
         return { value: item, label: item}
       })
+      const country = sessionStorage.getItem('country')
+      if(country){
+        address.value=country
+      }
     })
     const remoteMethod = (query)=>{
       if (query) {
@@ -28,7 +32,7 @@ export default {
       }
     }
     const goBack = ()=>{
-      emit('changeCurrent',{current:4,progress:80})
+      emit('changeCurrent',{current:4,progress:100/3})
     }
     const goNext=()=>{
       if(!address.value){
@@ -37,7 +41,9 @@ export default {
                   type: 'warning',
                 })
       }
-      console.log(address.value)
+      sessionStorage.setItem('country',address.value)
+      sessionStorage.removeItem('entityLegalName')
+      emit('changeCurrent',{current:7,progress:50})
     }
    return {
     address,
@@ -80,7 +86,11 @@ export default {
             />
             </el-select>
         </div>
-        <div class="btn"><el-button @click="goNext" type="primary" round > &nbsp; &nbsp; &nbsp;Press enter &nbsp; &nbsp; &nbsp;<el-icon ><Right /></el-icon></el-button></div>
+        <div class="btn">
+          <el-button @click="goNext" type="primary" round > &nbsp; &nbsp; &nbsp;Press enter &nbsp; &nbsp; &nbsp;<el-icon ><Right /></el-icon></el-button>
+          <div class="btn">
+    <div class="arrow"><el-icon @click="goBack" class="back"><Back /></el-icon></div>
+  </div></div>
       </div>
   </el-card>
   </div>
@@ -93,7 +103,6 @@ export default {
     align-items: center;
     justify-content: center;
     .box-card{
-      width: 50%;
       .el-card__body{
         display: flex;
         align-items: center;
@@ -111,7 +120,7 @@ export default {
         }
       }
       .title{
-        font-size: 40px;
+        font-size: 30px;
         font-weight: 700;
         text-align: left;
       }
@@ -130,4 +139,71 @@ export default {
       }
     }
   }
+  @media (min-width: 768px) {
+    .step-five{
+      .box-card{
+      width: 50%!important;
+      .arrow{
+        display: block;
+      }
+  }
+  .btn{
+    .arrow{
+      display: none;
+    }
+  }
+    }
+ 
+  
+}
+@media screen and (min-width: 501px), screen and (max-width: 767px) {
+  .step-five{
+    .box-card{
+      width: 80%;
+      .arrow{
+        display: block;
+      }
+  }
+  .el-card__body{
+    display: flex!important;
+    align-items: center!important;
+    justify-content: center!important;
+  }
+  .btn{
+    .arrow{
+      display: none;
+    }
+  }
+  }
+  
+}
+@media (max-width:500px){
+  .step-five{
+    overflow: auto;
+    align-items: baseline;
+    .box-card{
+      width: 100%;
+      margin-top: 0px!important;
+      height: calc(100vh - 70px);
+      .el-card__body{
+        width: 100vw;
+        padding: 0;
+      }
+      .content{
+        .item{
+          padding: 0 20px;
+        }
+      }
+     .arrow{
+      display: none;
+     }
+     .btn{
+      .arrow{
+        display: inline;
+         margin-top: 20px;
+      }
+     }
+  }
+  }
+}
 </style>

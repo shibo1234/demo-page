@@ -20,7 +20,7 @@ export default {
         }
       ])
       const goNext = ()=>{
-      emit('changeCurrent',{current:2,progress:40})
+      emit('changeCurrent',{current:2,progress:100/6})
     }
     const goSign = ()=>{
       router.push('/sign')
@@ -48,19 +48,19 @@ export default {
     <div class="btn"><el-button @click="goNext" type="primary" round> &nbsp; &nbsp; &nbsp;Continue &nbsp; &nbsp; &nbsp;</el-button></div>
     <div class="sign"><span>Already have an account?</span><span @click="goSign">Sign In.</span> </div>
   </el-card>
+ <div class="sector"></div>
   </div>
 </template>
 
-<style lang="less">
-  .step-one{
+<style lang="less" scoped>
+.step-one{
     height: 90vh;
     display: flex;
     align-items: center;
     justify-content: center;
     .box-card{
-      width: 50%;
       .title{
-        font-size: 40px;
+        font-size: 30px;
         font-weight: 700;
         text-align: center;
       }
@@ -82,10 +82,11 @@ export default {
           }
           .text{
             font-weight: 600;
+            flex: 1;
           }
         }
         .desc{
-          text-indent: 25px;
+          padding-left: 35px;
         }
       }
       .btn{
@@ -107,5 +108,65 @@ export default {
         }
       }
     }
+    .sector{
+      position: fixed;
+      border-radius: 50%;
+      background-color:#c18c56;
+      
+    }
   }
+@media (min-width: 768px) {
+  .step-one{
+    .box-card{
+      width: 50%!important;
+  }
+  .sector{
+    width: 272px!important;
+    height: 272px!important;
+    bottom:-136px!important;
+    right: -136px!important;
+  }
+  }
+  
+}
+@media screen and (min-width: 501px), screen and (max-width: 767px) {
+  .step-one{
+    .box-card{
+      width: 80%;
+  }
+  .sector{
+    width: 150px;
+    height: 150px;
+    bottom:-75px;
+    right: -75px;
+  }
+  }
+}
+@media (max-width:500px){
+  .step-one{
+    overflow: auto;
+    .box-card{
+    width: 100%;
+    margin-top: 90px;
+   
+    .sign{
+      padding-bottom: 20px;
+      span{
+        font-weight: normal!important;
+        font-size: 14px!important;
+      }
+    }
+  }
+  .item{
+      padding : 0 20px;
+  }
+  .sector{
+    width: 150px;
+    height: 150px;
+    bottom:-75px;
+    right: -75px;
+  }
+  }
+}
+  
 </style>

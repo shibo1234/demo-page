@@ -1,62 +1,102 @@
 <script>
 import {ref,onMounted} from 'vue';
+import Countries from '../assets/country';
 import { ElMessage } from 'element-plus'
 export default {
   setup(props,{emit}) {
-    const entityLegalName = ref('');
-    const goBack = ()=>{
-      emit('changeCurrent',{current:4,progress:100/3})
+    const address=ref('')
+    const loading=ref(false)
+    const options=ref([])
+    const list=ref([])
+    const countries=ref(Countries)
+    onMounted(() => {
+      list.value = countries.value.map((item) => {
+        return { value: item, label: item}
+      })
+      const country = sessionStorage.getItem('country')
+      if(country){
+        address.value=country
+      }
+    })
+    const remoteMethod = (query)=>{
+      if (query) {
+        loading.value = true
+        setTimeout(() => {
+          loading.value = false
+          options.value = list.value.filter((item) => {
+            return item.label.toLowerCase().includes(query.toLowerCase())
+          })
+        }, 200)
+      } else {
+        options.value = []
+      }
     }
-    const goNext = ()=>{
-      if(!entityLegalName.value){
+    const goBack = ()=>{
+      emit('changeCurrent',{current:6,progress:500/12})
+    }
+    const goNext=()=>{
+      if(!address.value){
         return ElMessage({
-                  message: 'Please enter your entity name',
+                  message: 'Please enter your country',
                   type: 'warning',
                 })
       }
-      sessionStorage.setItem('entityLegalName',entityLegalName.value)
-      console.log(entityLegalName.value)
-      sessionStorage.removeItem('name')
-      emit('changeCurrent',{current:5.1,progress:50})
+      sessionStorage.setItem('country',address.value)
+      emit('changeCurrent',{current:7,progress:50})
     }
-    onMounted(() => {
-      const cacheName = sessionStorage.getItem('entityLegalName')
-      if(entityLegalName) {
-        entityLegalName.value = cacheName
-      }
-    })
-    return {
-      entityLegalName,
-      goBack,
-      goNext
-    }
+   return {
+    address,
+    loading,
+    options,
+    list,
+    countries,
+    remoteMethod,
+    goBack,
+    goNext
+   }
   }
 }
 </script>
 
 <template>
-  <div class="step-six">
+  <div class="step-five">
     <el-card class="box-card">
       <div class="arrow"><el-icon @click="goBack" class="back"><Back /></el-icon></div>
       <div class="content">
-        <div class="title">What's your entity name</div>
+        <div class="title">Where was your entity formed?</div>
         <div class="desc">
-          Please enter the full legal name of the entity.
+          Please provide us with your jurisdiction of formation, enabling us to ensure compliance with local regulations. 
         </div>
         <div class="input">
-          <el-input v-model="entityLegalName" placeholder="Entity legal name" />
+          <el-select
+            v-model="address"
+            filterable
+            remote
+            reserve-keyword
+            placeholder="search for a country "
+            :remote-method="remoteMethod"
+            :loading="loading"
+          >
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+            </el-select>
         </div>
         <div class="btn">
           <el-button @click="goNext" type="primary" round > &nbsp; &nbsp; &nbsp;Press enter &nbsp; &nbsp; &nbsp;<el-icon ><Right /></el-icon></el-button>
-          <div class="arrow"><el-icon @click="goBack" class="back"><Back /></el-icon></div>
-        </div>
+          <div class="btn">
+    <div class="arrow"><el-icon @click="goBack" class="back"><Back /></el-icon></div>
+  </div></div>
       </div>
   </el-card>
   </div>
 </template>
 
 <style  lang="less">
-  .step-six{
+  .step-five{
     height: 90vh;
     display: flex;
     align-items: center;
@@ -73,6 +113,9 @@ export default {
             font-weight: 600;
             cursor: pointer;
           }
+        }
+        .content{
+          width: 70%;
         }
       }
       .title{
@@ -96,7 +139,7 @@ export default {
     }
   }
   @media (min-width: 768px) {
-    .step-six{
+    .step-five{
       .box-card{
       width: 50%!important;
       .arrow{
@@ -113,7 +156,7 @@ export default {
   
 }
 @media screen and (min-width: 501px), screen and (max-width: 767px) {
-  .step-six{
+  .step-five{
     .box-card{
       width: 80%;
       .arrow{
@@ -134,7 +177,7 @@ export default {
   
 }
 @media (max-width:500px){
-  .step-six{  
+  .step-five{
     overflow: auto;
     align-items: baseline;
     .box-card{
@@ -153,15 +196,10 @@ export default {
      .arrow{
       display: none;
      }
-     .input{
-      margin: 0 20px;
-     }
      .btn{
       .arrow{
-        display: block;
-        width: 100vw;
+        display: inline;
          margin-top: 20px;
-         text-align: center;
       }
      }
   }

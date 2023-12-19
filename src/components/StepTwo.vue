@@ -18,10 +18,10 @@ export default {
         }
       ])
       const goBack = ()=>{
-        emit('changeCurrent',{current:1,progress:20})
+        emit('changeCurrent',{current:1,progress:100/12})
       }
       const goNext = ()=>{
-        emit('changeCurrent',{current:3,progress:60})
+        emit('changeCurrent',{current:3,progress:25})
       }
       return {
         textList,
@@ -45,7 +45,10 @@ export default {
           </div>
           <div class="desc">{{ item.desc }}</div>
         </div>
-        <div class="btn"><el-button @click="goNext" type="primary" round> &nbsp; &nbsp; &nbsp;Let's get started &nbsp; &nbsp; &nbsp;</el-button></div>
+        <div class="btn">
+          <el-button @click="goNext" type="primary" round> &nbsp; &nbsp; &nbsp;Let's get started &nbsp; &nbsp; &nbsp;</el-button>
+          <div class="arrow"><el-icon @click="goBack" class="back"><Back /></el-icon></div>
+        </div>
       </div>
   </el-card>
   </div>
@@ -58,11 +61,7 @@ export default {
     align-items: center;
     justify-content: center;
     .box-card{
-      width: 50%;
       .el-card__body{
-        display: flex;
-        align-items: center;
-        justify-content: center;
         .arrow{
           width: 50px;
           .back{
@@ -73,7 +72,7 @@ export default {
         }
       }
       .title{
-        font-size: 40px;
+        font-size: 30px;
         font-weight: 700;
         text-align: center;
       }
@@ -108,7 +107,7 @@ export default {
           }
         }
         .desc{
-          text-indent: 35px;
+          padding-left: 35px;
         }
       }
       .btn{
@@ -131,4 +130,68 @@ export default {
       }
     }
   }
+  @media (min-width: 768px) {
+    .step-two{
+      .box-card{
+      width: 50%!important;
+      .arrow{
+        display: block;
+      }
+      }
+      .btn{
+        .arrow{
+          display: none;
+        }
+      }
+    }
+}
+@media screen and (min-width: 501px), screen and (max-width: 767px) {
+  .step-two{
+    .box-card{
+      width: 80%;
+      .arrow{
+        display: block;
+      }
+  }
+  .el-card__body{
+    display: flex!important;
+    align-items: center!important;
+    justify-content: center!important;
+  }
+  .btn{
+        .arrow{
+          display: none;
+        }
+      }
+  }
+  
+}
+@media (max-width:500px){
+  .step-two{
+    overflow: auto;
+    align-items: baseline;
+    .box-card{
+      width: 100%;
+      margin-top: 0px!important;
+      height: calc(100vh - 70px);
+      .content{
+        .item{
+          padding: 0 20px;
+        }
+      }
+     .arrow{
+      display: none;
+     }
+     .btn{
+      .arrow{
+        display: block;
+        width: 100vw!important;
+         text-align: center;
+         margin-top: 20px;
+      }
+     }
+  }
+  }
+  
+}
 </style>
